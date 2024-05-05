@@ -1,26 +1,45 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { Suspense, lazy } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "./store/store";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+const LandingPage = lazy(() => import("./pages/LandingPage"));
+const Home = lazy(() => import("./pages/Home"));
+const Profile = lazy(() => import("./pages/Profile"));
+const AllCourses = lazy(() => import("./pages/AllCourses"));
+const Course = lazy(() => import("./pages/Course"));
+
+const SampleLoader = (
+  <div className="flex w-full h-full min-h-screen justify-center items-center">
+    <p className="text-xl md:text-3xl">Loading...</p>
+  </div>
+);
+
+export default function App() {
+  const { isAuthenticated } = useSelector((state: RootState) => state.user);
+  const router = createBrowserRouter([
+    {
+      path: "/",
+      element: (
+        <Suspense fallback={SampleLoader}>
+          {isAuthenticated ? <Home /> : <LandingPage />}
+        </Suspense>
+      ),
+    },
+    {
+      path: "/profile",
+      element: <Profile />,
+    },
+    {
+      path: "/courses",
+      element: <AllCourses />,
+      children: [
+        {
+          path: "/courses/:id",
+          element: <Course />,
+        },
+      ],
+    },
+  ]);
+  return <RouterProvider router={router} />;
 }
-
-export default App;
