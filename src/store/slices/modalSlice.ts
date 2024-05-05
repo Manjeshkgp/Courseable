@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-type modalsType = "login" | "signup" | null;
+type modalsType = "login" | "signup" | "course" | null;
 
 const initialState: { currentModal: modalsType; data?: any } = {
   currentModal: null,

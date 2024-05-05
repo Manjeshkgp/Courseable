@@ -11,7 +11,7 @@ const Header: FC<HeaderProps> = ({}) => {
   const dispatch = useDispatch();
   const openLoginModal = () => dispatch(updateModal({ currentModal: "login" }));
   return (
-    <header className="sticky top-0 bg-slate-50 text-slate-950 flex justify-between items-center p-3 border-b border-slate-300 md:px-8 md:py-4">
+    <header className="sticky z-10 top-0 bg-slate-50 text-slate-950 flex justify-between items-center p-3 border-b border-slate-300 md:px-8 md:py-4">
       <Logo />
       <div className="flex justify-end items-center gap-3 md:gap-5 md:text-2xl">
         <Link to={"/courses"}>Courses</Link>

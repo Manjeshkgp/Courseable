@@ -2,6 +2,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Suspense, lazy } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "./store/store";
+import ModalManager from "./components/ModalManager";
 
 const LandingPage = lazy(() => import("./pages/LandingPage"));
 const Home = lazy(() => import("./pages/Home"));
@@ -20,23 +21,26 @@ export default function App() {
   const router = createBrowserRouter([
     {
       path: "/",
-      element: (
+      element: (<>
         <Suspense fallback={SampleLoader}>
           {isAuthenticated ? <Home /> : <LandingPage />}
         </Suspense>
+        <ModalManager/></>
       ),
-    },
-    {
-      path: "/profile",
-      element: <Profile />,
-    },
-    {
-      path: "/courses",
-      element: <AllCourses />,
       children: [
         {
-          path: "/courses/:id",
-          element: <Course />,
+          path: "/profile",
+          element: <Profile />,
+        },
+        {
+          path: "/courses",
+          element: <AllCourses />,
+          children: [
+            {
+              path: "/courses/:id",
+              element: <Course />,
+            },
+          ],
         },
       ],
     },

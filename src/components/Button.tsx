@@ -1,4 +1,5 @@
 import { ButtonHTMLAttributes, FC } from "react";
+import { cn } from "../lib/utils";
 
 const styles = {
   primary:
@@ -10,15 +11,17 @@ const styles = {
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children?: React.ReactNode;
   variant?: keyof typeof styles;
+  className?:string
 }
 
 const Button: FC<ButtonProps> = ({
   variant = "primary",
   children,
+  className,
   ...props
 }) => {
   return (
-    <button className={styles[variant]} {...props}>
+    <button className={cn(styles[variant],className)} {...props}>
       {children ?? "Enter some text"}
     </button>
   );

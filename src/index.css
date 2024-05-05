@@ -10,3 +10,22 @@
 *{
   font-family: 'Roboto Flex', sans-serif;
 }
+
+::-webkit-scrollbar-track {
+  background-color: #ffffff;
+  opacity: 0.75;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #0177fb;
+  border-radius: 8px;
+  opacity: 0.5;
+  border: 2px solid #ffffff;
+}
+
+::-webkit-scrollbar {
+  background-color: #ffffff;
+  width: 8px;
+  height: 8px;
+  opacity: 0.75;
+}
