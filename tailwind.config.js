@@ -5,6 +5,10 @@ module.exports = {
       colors: {
         primary: "#0177fb",
       },
+      screens: {
+        "xs":"355px",
+        "md":"767px"
+      }
     },
   },
   plugins: [],

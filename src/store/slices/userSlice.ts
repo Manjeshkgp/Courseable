@@ -1,28 +1,25 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  jwt: "",
   id: "",
-  name: "",
   email: "",
   isAuthenticated: false,
-  myCourses:[]
+  myCourses: [],
 };
-
-const alreadyLoggedInUser = localStorage.getItem("user");
-
-const isLocallyAuth:boolean = typeof alreadyLoggedInUser === 'string' ? JSON.parse(alreadyLoggedInUser)?.isAuthenticated === 'true' : false
 
 export const user = createSlice({
   name: "user",
-  initialState:{...initialState, isAuthenticated: isLocallyAuth},
+  initialState,
   reducers: {
     logout: () => initialState,
-    login: (state, action) => {
-      return { ...action.payload, isAuthenticated:true };
+    login: (_state, action) => {
+      return { ...action.payload, isAuthenticated: true };
+    },
+    updateUser: (_state, action) => {
+      return { ...action.payload };
     },
   },
 });
 
-export const { login, logout } = user.actions;
+export const { login, logout, updateUser } = user.actions;
 export default user.reducer;

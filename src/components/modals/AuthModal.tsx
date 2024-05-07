@@ -1,13 +1,25 @@
-import { FC, useEffect } from "react";
+import { ChangeEventHandler, FC, FormEvent, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { closeModal, updateModal } from "../../store/slices/modalSlice";
+import {
+  closeModal,
+  updateLoading,
+  updateModal,
+} from "../../store/slices/modalSlice";
 import { RootState } from "../../store/store";
 import Button from "../Button";
+import Close from "../svgs/Close";
+import { auth } from "../../lib/firebase";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
+import { login } from "../../store/slices/userSlice";
 
 interface AuthModalProps {}
 
 const AuthModal: FC<AuthModalProps> = ({}) => {
   const { currentModal } = useSelector((state: RootState) => state.modals);
+  const [formData, setFormData] = useState({ email: "", password: "" });
   const dispatch = useDispatch();
   const toggleAuthModalState = () => {
     dispatch(
@@ -23,6 +35,51 @@ const AuthModal: FC<AuthModalProps> = ({}) => {
   useEffect(() => {
     document.documentElement.style.overflow = "hidden";
   }, []);
+
+  const inputChangeHandler: ChangeEventHandler<HTMLInputElement> = (e) => {
+    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
+  const formSubmitHandler = async (e: FormEvent) => {
+    e.preventDefault();
+    if (currentModal === "signup") {
+      dispatch(updateLoading(true));
+      try {
+        const { user } = await createUserWithEmailAndPassword(
+          auth,
+          formData.email,
+          formData.password
+        );
+        if (user) {
+          dispatch(login({email:user.email,id:user.uid,myCourses:[]}))
+        }
+        dispatch(closeModal())
+        dispatch(updateLoading(false));
+      } catch (error) {
+        console.log({ error });
+        dispatch(updateLoading(false));
+      }
+    } else if (currentModal === "login") {
+      dispatch(updateLoading(true));
+
+      try {
+        const { user } = await signInWithEmailAndPassword(
+          auth,
+          formData.email,
+          formData.password
+        );
+        if (user) {
+          dispatch(login({email:user.email,id:user.uid,myCourses:[]}))
+        }
+        dispatch(closeModal())
+        dispatch(updateLoading(false));
+      } catch (error) {
+        console.log({ error });
+        dispatch(updateLoading(false));
+      }
+    }
+  };
+
   return (
     <div className="relative p-4 w-full max-w-md max-h-full">
       <div className="relative bg-white rounded-lg shadow dark:bg-slate-700">
@@ -34,33 +91,14 @@ const AuthModal: FC<AuthModalProps> = ({}) => {
           </h3>
           <Button
             type="button"
-            className="h-auto w-auto px-2 text-slate-600 py-2 min-w-[unset]"
+            className="h-auto w-auto px-2 text-slate-300 py-2 min-w-[unset]"
             onClick={closeModalFunc}
           >
-            <svg
-              className="w-3 h-3"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 14 14"
-            >
-              <path
-                stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
-              />
-            </svg>
+            <Close />
           </Button>
         </div>
         <div className="p-4 md:p-5">
-          <form
-            className="space-y-4"
-            onSubmit={(e) => {
-              e.preventDefault();
-            }}
-          >
+          <form className="space-y-4" onSubmit={formSubmitHandler}>
             <div>
               <label
                 htmlFor="email"
@@ -75,6 +113,8 @@ const AuthModal: FC<AuthModalProps> = ({}) => {
                 className="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-lg focus:ring-primary focus:border-primary block w-full p-2.5 dark:bg-slate-600 dark:border-slate-500 dark:placeholder-slate-400 dark:text-white"
                 placeholder="name@company.com"
                 required
+                value={formData.email}
+                onChange={inputChangeHandler}
               />
             </div>
             <div>
@@ -91,6 +131,8 @@ const AuthModal: FC<AuthModalProps> = ({}) => {
                 placeholder="••••••••"
                 className="bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-lg focus:ring-primary focus:border-primary block w-full p-2.5 dark:bg-slate-600 dark:border-slate-500 dark:placeholder-slate-400 dark:text-white"
                 required
+                value={formData.password}
+                onChange={inputChangeHandler}
               />
             </div>
             <Button className="text-white p-3 h-auto" type="submit">

@@ -2,7 +2,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Suspense, lazy } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "./store/store";
-import ModalManager from "./components/ModalManager";
+import Layout from "./components/Layout";
 
 const LandingPage = lazy(() => import("./pages/LandingPage"));
 const Home = lazy(() => import("./pages/Home"));
@@ -20,27 +20,42 @@ export default function App() {
   const { isAuthenticated } = useSelector((state: RootState) => state.user);
   const router = createBrowserRouter([
     {
-      path: "/",
-      element: (<>
-        <Suspense fallback={SampleLoader}>
-          {isAuthenticated ? <Home /> : <LandingPage />}
-        </Suspense>
-        <ModalManager/></>
-      ),
+      path: "",
+      element: <Layout />,
       children: [
         {
+          path: "/",
+          element: (
+            <>
+              <Suspense fallback={SampleLoader}>
+                {isAuthenticated ? <Home /> : <LandingPage />}
+              </Suspense>
+            </>
+          ),
+        },
+        {
           path: "/profile",
-          element: <Profile />,
+          element: (
+            <Suspense fallback={SampleLoader}>
+              <Profile />
+            </Suspense>
+          ),
         },
         {
           path: "/courses",
-          element: <AllCourses />,
-          children: [
-            {
-              path: "/courses/:id",
-              element: <Course />,
-            },
-          ],
+          element: (
+            <Suspense fallback={SampleLoader}>
+              <AllCourses />
+            </Suspense>
+          ),
+        },
+        {
+          path: "/courses/:id",
+          element: (
+            <Suspense fallback={SampleLoader}>
+              <Course />
+            </Suspense>
+          ),
         },
       ],
     },
