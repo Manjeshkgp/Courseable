@@ -35,3 +35,28 @@ const app = initializeApp(firebaseConfig);
 
 export const db = getDatabase(app);
 export const auth = getAuth(app);
+
+const getCourses = async () => {
+  const coursesRef = ref(db, 'courses');
+  const snapshot = await get(coursesRef);
+  const courses = snapshot.val();
+  return courses;
+};
+
+const getCourseById = async (courseId:string) => {
+  const courseRef = ref(db, `courses/${courseId}`);
+  try {
+    const snapshot = await get(courseRef);
+    if (snapshot.exists()) {
+      return snapshot.val();
+    } else {
+      console.log('Course not found');
+      return null;
+    }
+  } catch (error) {
+    console.error('Error getting course:', error);
+    throw error;
+  }
+};
+
+export { getCourses, getCourseById };

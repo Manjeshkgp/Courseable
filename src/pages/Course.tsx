@@ -1,10 +1,18 @@
-import { FC } from 'react'
+import { useEffect } from "react";
+import { useParams } from "react-router-dom"
+import { getCourseById } from "../lib/firebase";
 
-interface CourseProps {
-  
-}
-
-const Course: FC<CourseProps> = ({}) => {
+const Course = () => {
+const {id:courseId} = useParams();
+useEffect(()=>{
+  if(courseId){
+    try {
+    getCourseById(courseId).then(data=>{console.log({data})}).catch(err=>{console.log({err})})
+    } catch (error) {
+      console.log({error})
+    }
+  }
+},[courseId])
   return <div>Course</div>
 }
 

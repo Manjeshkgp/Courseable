@@ -4,7 +4,6 @@ import Button from "./Button";
 import { Link } from "react-router-dom";
 import Close from "./svgs/Close";
 import Home from "./svgs/Home";
-import Courses from "./svgs/Courses";
 import Searchbar from "./Searchbar";
 import { signOut } from "firebase/auth";
 import { auth } from "../lib/firebase";
@@ -42,16 +41,10 @@ const Navbar = () => {
             <Link
               className="flex justify-start items-center gap-1 bg-primary p-1 rounded-md w-[calc(100%-40px)] hover:text-slate-50 hover:bg-opacity-90"
               to={"/"}
+              onClick={toggleOpen}
             >
               <Home />
               <p>Home</p>
-            </Link>
-            <Link
-              className="flex justify-start items-center gap-1 bg-primary p-1 rounded-md w-[calc(100%-40px)] hover:text-slate-50 hover:bg-opacity-90"
-              to={"/courses"}
-            >
-              <Courses />
-              <p>Courses</p>
             </Link>
             <Button
             onClick={logoutFunc}

@@ -1,21 +1,18 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { userApi } from "./APIs/userApi";
-import userSlice from "./slices/userSlice";
 import { setupListeners } from "@reduxjs/toolkit/query";
+import userSlice from "./slices/userSlice";
 import modalSlice from "./slices/modalSlice";
+import courseSlice from "./slices/courseSlice";
 
 export const store = configureStore({
   reducer: {
-    user:userSlice,
+    user: userSlice,
     modals: modalSlice,
-    [userApi.reducerPath]: userApi.reducer,
+    courses: courseSlice,
   },
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({}).concat([
-      userApi.middleware,
-    ]),
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware({}),
 });
 
 setupListeners(store.dispatch);
 
-export type RootState = ReturnType<typeof store.getState>
+export type RootState = ReturnType<typeof store.getState>;

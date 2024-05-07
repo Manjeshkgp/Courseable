@@ -7,7 +7,6 @@ import Layout from "./components/Layout";
 const LandingPage = lazy(() => import("./pages/LandingPage"));
 const Home = lazy(() => import("./pages/Home"));
 const Profile = lazy(() => import("./pages/Profile"));
-const AllCourses = lazy(() => import("./pages/AllCourses"));
 const Course = lazy(() => import("./pages/Course"));
 
 const SampleLoader = (
@@ -42,15 +41,7 @@ export default function App() {
           ),
         },
         {
-          path: "/courses",
-          element: (
-            <Suspense fallback={SampleLoader}>
-              <AllCourses />
-            </Suspense>
-          ),
-        },
-        {
-          path: "/courses/:id",
+          path: "/course/:id",
           element: (
             <Suspense fallback={SampleLoader}>
               <Course />
