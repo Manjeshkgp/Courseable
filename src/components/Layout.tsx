@@ -8,6 +8,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../lib/firebase";
 import { updateLoading } from "../store/slices/modalSlice";
 import { login } from "../store/slices/userSlice";
+import LandingPage from "../pages/LandingPage";
 
 const Layout = () => {
   const { isAuthenticated } = useSelector((state: RootState) => state.user);
@@ -34,7 +35,7 @@ const Layout = () => {
   return (
     <>
       {isAuthenticated && <Navbar />}
-      <Outlet />
+      {isAuthenticated ? <Outlet />:<LandingPage/>}
       <ModalManager />
     </>
   );

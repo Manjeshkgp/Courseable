@@ -1,12 +1,35 @@
-import { FC } from "react";
+import React, { FC, useState } from "react";
 import { Link } from "react-router-dom";
 import { courseI } from "../store/slices/courseSlice";
+import { useSelector } from "react-redux";
+import { RootState } from "../store/store";
+import { increaseStudentProgress } from "../lib/firebase";
 
 interface CourseProps {
-  data:courseI
+  data: courseI;
+  showProgress?: boolean;
 }
 
-const Course: FC<CourseProps> = ({data}) => {
+const Course: FC<CourseProps> = ({ data, showProgress }) => {
+  const user = useSelector((state: RootState) => state.user);
+  const myEnrollment = data.students?.find((obj) => obj.id === user.id);
+  const [progress, setProgress] = useState<number | undefined>(
+    myEnrollment?.progress
+  );
+  const updateProgress = (e: React.ChangeEvent<HTMLInputElement>) => {
+    try {
+      setProgress(Number(e.target.value));
+      if (myEnrollment?.id)
+        increaseStudentProgress(
+          data.courseId,
+          myEnrollment?.id,
+          Number(e.target.value)
+        );
+    } catch (err) {
+      console.log({ err });
+      alert("Oops! Some error occured during the updation of progress");
+    }
+  };
   const enrolmentStatusColor = () => {
     switch (data.enrollmentStatus) {
       case "Open":
@@ -47,6 +70,19 @@ const Course: FC<CourseProps> = ({data}) => {
           View more
         </Link>
       </div>
+      {myEnrollment && showProgress && (
+        <div className="flex w-full justify-between items-center text-sm text-slate-800 gap-1">
+          <p className="text-nowrap">Progress :</p>
+          <input
+            onChange={updateProgress}
+            className="w-full"
+            type="range"
+            min={0}
+            max={100}
+            value={progress}
+          />
+        </div>
+      )}
     </div>
   );
 };

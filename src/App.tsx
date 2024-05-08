@@ -1,10 +1,7 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Suspense, lazy } from "react";
-import { useSelector } from "react-redux";
-import { RootState } from "./store/store";
 import Layout from "./components/Layout";
 
-const LandingPage = lazy(() => import("./pages/LandingPage"));
 const Home = lazy(() => import("./pages/Home"));
 const Profile = lazy(() => import("./pages/Profile"));
 const Course = lazy(() => import("./pages/Course"));
@@ -16,7 +13,6 @@ const SampleLoader = (
 );
 
 export default function App() {
-  const { isAuthenticated } = useSelector((state: RootState) => state.user);
   const router = createBrowserRouter([
     {
       path: "",
@@ -27,7 +23,7 @@ export default function App() {
           element: (
             <>
               <Suspense fallback={SampleLoader}>
-                {isAuthenticated ? <Home /> : <LandingPage />}
+                <Home />
               </Suspense>
             </>
           ),

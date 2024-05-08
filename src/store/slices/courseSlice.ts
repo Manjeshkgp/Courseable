@@ -6,10 +6,10 @@ type SyllabusItem = {
   content: string;
 };
 
-type Student = {
+export type Student = {
   id: string;
-  name: string;
   email: string;
+  progress:number
 };
 
 export interface courseI {
@@ -25,7 +25,7 @@ export interface courseI {
   prerequisites: string[];
   syllabus: SyllabusItem[];
   students?: Student[];
-  likes?: string[];
+  likes?: {[key:string]:string}[];
   courseId: string;
 }
 
